@@ -44,7 +44,7 @@ services:
       - dep-pipeline-network
   nginx:
     image: nginx:latest
-    container_name: dep_pipeline-nginx
+    container_name: dep-pipeline-nginx
     restart: always
     ports:
       - 443:443

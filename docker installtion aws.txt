@@ -1,0 +1,61 @@
+Installation failed. Check that you have permissions to install.
+----
+
+<> We then followed these steps, as we were using an Amazon Linux image:
+
+1. First, updated your existing packages:
+$ sudo yum update -y
+ 
+2. Install the docker package:   
+$ sudo yum install docker -y
+  
+3. Start the Docker service:   
+$ sudo service docker start
+
+4. Enable Docker to start on boot:  
+$ sudo systemctl enable docker
+
+<> After following the steps above, the first error disappeared, but we encountered the following error:
+----
+Failed to start docker.service: Unit not found.
+Installing : docker-25.0.6-1.amzn2.0.3.x86_64                                                                                                                                                               1/1
+Error unpacking rpm package docker-25.0.6-1.amzn2.0.3.x86_64
+error: unpacking of archive failed on file /usr/bin/docker: cpio: rename
+----
+
+<> This error typically occurs when there's a conflict with existing Docker files or a previous installation.
+
+<> We then followed these steps to clean up the pre-existing Docker files:
+
+1. First, checked if amazon-linux-extras is properly installed:  
+$ yum install -y amazon-linux-extras
+  
+2. List available extras:
+$ amazon-linux-extras list
+
+3. If the above steps work, try installing docker with:
+----
+amazon-linux-extras enable docker
+yum clean metadata
+yum install docker
+----
+
+4. We removed all pre-existing Docker files and then reinstalled them..
+
+<> Then we were able to successfully install docker.
+
+<> Regarding your question about Docker Compose: Since Kubernetes version 1.25, containerd is used as the default runtime. If Docker is required, it needs to be installed externally. To install Docker Compose, use these commands:
+
+$ sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname  -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+$ sudo chmod +x /usr/local/bin/docker-compose
+
+Additionally, you mentioned that you would consult your internal team about the VPN issues.
+
+Since your issue has been resolved by following the above steps, as we discussed on our call, I will proceed to mark this case as resolved from my end.
+Thank you and have an AWSome Day ahead!
+
+We value your feedback. Please share your experience by rating this and other correspondences in the AWS Support Center. You can rate a correspondence by selecting the stars in the top right corner of the correspondence.
+
+Best regards,
+Sanjana G.
+Amazon Web Services

@@ -2,3 +2,4 @@ nexus-data/
 gitlab/
 gitlab-runner/
 code_repository/
+.env

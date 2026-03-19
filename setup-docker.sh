@@ -20,9 +20,9 @@ if [ ! -d "$path_gitlab" ]; then
     mkdir "$path_gitlab/logs"
     mkdir "$path_gitlab/data"
 else
-    rm -rf "$path_gitlab/config/*"
-    rm -rf "$path_gitlab/logs/*"
-    rm -rf "$path_gitlab/data/*"
+    rm -rf "$path_gitlab/config/"*
+    rm -rf "$path_gitlab/logs/"*
+    rm -rf "$path_gitlab/data/"*
 fi
 
 path_runner="./gitlab-runner"
@@ -30,7 +30,7 @@ if [ ! -d "$path_runner" ]; then
     mkdir "$path_runner"
     mkdir "$path_runner/config"
 else
-    rm -rf "$path_runner/config/*"
+    rm -rf "$path_runner/config/"*
 fi
 
 path_nexus="./nexus-data"

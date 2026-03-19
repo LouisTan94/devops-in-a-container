@@ -1,5 +1,5 @@
 #!/bin/bash
-nexus_host=http://localhost:8081
+nexus_host=http://localhost:8082
 admin_password="P@ssw0rd1234"
 container_name="dep-pipeline-nexus"
 docker_repo="docker-hosted"

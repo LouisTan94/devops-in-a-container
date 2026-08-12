@@ -12,7 +12,8 @@
       "Bash(docker volume:*)",
       "Bash(bash setup-docker.sh)",
       "Bash(printf '\\\\n\\\\n\\\\n')",
-      "Bash(bash setup-runner.sh)"
+      "Bash(bash setup-runner.sh)",
+      "Bash(git:*)"
     ]
   }
 }

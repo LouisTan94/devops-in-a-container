@@ -3,3 +3,4 @@ gitlab/
 gitlab-runner/
 code_repository/
 .env
+.claude/

@@ -13,7 +13,8 @@
       "Bash(bash setup-docker.sh)",
       "Bash(printf '\\\\n\\\\n\\\\n')",
       "Bash(bash setup-runner.sh)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(tasklist /FI \"PID eq 23056\")"
     ]
   }
 }

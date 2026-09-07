@@ -17,7 +17,7 @@ services:
     volumes:
       - ./gitlab/config:/etc/gitlab
       - ./gitlab/logs:/var/log/gitlab
-      - ./gitlab/data:/var/opt/gitlab
+      - gitlab_data:/var/opt/gitlab
       - gitlab_artifacts:/var/opt/gitlab/gitlab-rails/shared/artifacts  # Volume for artifacts
     networks:
       - dep-pipeline-network
@@ -62,4 +62,5 @@ networks:
   dep-pipeline-network:
     driver: bridge
 volumes:
+  gitlab_data:
   gitlab_artifacts:

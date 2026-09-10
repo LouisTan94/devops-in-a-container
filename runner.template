@@ -15,4 +15,4 @@
     volumes = ["/cache","/var/run/docker.sock:/var/run/docker.sock"]
     shm_size = 0
     network_mtu = 0
-    network_mode = "dep-pipeline_dep-pipeline-network"
+    network_mode = "devops-in-a-container_dep-pipeline-network"

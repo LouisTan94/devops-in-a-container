@@ -25,8 +25,9 @@ MSYS_NO_PATHCONV=1 openssl req -new \
   -subj "/C=XX/ST=Local/L=Local/O=dep-pipeline/CN=localhost" \
   -out "$CERTS_DIR/nexus.csr"
 
-# ── 3. Sign with root CA (SAN covers localhost + 127.0.0.1) ─────────────────
+# ── 3. Sign with root CA (SAN covers localhost + hostname + 127.0.0.1) ───────
 echo "[3/3] Signing server cert with root CA..."
+HOST_NAME=$(hostname)
 cat > "$CERTS_DIR/nexus.ext" <<EOF
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
@@ -37,6 +38,8 @@ subjectAltName = @alt_names
 [alt_names]
 DNS.1 = localhost
 DNS.2 = dep-pipeline-nexus
+DNS.3 = ${HOST_NAME}
+DNS.4 = ${HOST_NAME}.local
 IP.1  = 127.0.0.1
 EOF
 

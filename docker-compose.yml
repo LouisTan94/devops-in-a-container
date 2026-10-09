@@ -1,4 +1,5 @@
 ---
+name: devops-in-a-container
 version: "3"
 services:
   gitlab:

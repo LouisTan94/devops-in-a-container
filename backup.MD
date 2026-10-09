@@ -41,6 +41,7 @@ Restore
 Prerequisite:
 1. GitLab is running. If not, start it using sudo gitlab-ctl start.
 2. Gitlab data must be hidden for the backup process.
+3. Both Gitlab instance must be in identical version.
 
 The backup file must can be found in the backup path, which is defined in the configuration file /etc/gitlab/gitlab.rb by the key gitlab_rails[‘backup_path’].
 ```

@@ -28,6 +28,21 @@ MSYS_NO_PATHCONV=1 openssl req -new \
 # ── 3. Sign with root CA (SAN covers localhost + hostname + 127.0.0.1) ───────
 echo "[3/3] Signing server cert with root CA..."
 HOST_NAME=$(hostname)
+# Use first argument as IP if provided, otherwise auto-detect
+if [ -n "$1" ]; then
+  LOCAL_IP="$1"
+else
+  # Skip loopback (127.x), Docker (172.x), and WSL (172.x) ranges
+  LOCAL_IP=$(ipconfig 2>/dev/null \
+    | grep -i "IPv4" \
+    | awk '{print $NF}' \
+    | tr -d '\r' \
+    | grep -v '^127\.' \
+    | grep -v '^172\.' \
+    | grep -v '^169\.' \
+    | head -1)
+fi
+echo "Detected local IP: $LOCAL_IP"
 cat > "$CERTS_DIR/nexus.ext" <<EOF
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
@@ -41,6 +56,7 @@ DNS.2 = dep-pipeline-nexus
 DNS.3 = ${HOST_NAME}
 DNS.4 = ${HOST_NAME}.local
 IP.1  = 127.0.0.1
+IP.2  = ${LOCAL_IP}
 EOF
 
 openssl x509 -req \

@@ -3,7 +3,7 @@ name: devops-in-a-container
 version: "3"
 services:
   gitlab:
-    image: gitlab/gitlab-ce:19.1.3-ce.0
+    image: gitlab/gitlab-ce:19.5.3-ce.0
     container_name: dep-pipeline-gitlab
     restart: always
     hostname: dep-pipeline-gitlab
@@ -14,6 +14,18 @@ services:
       GITLAB_OMNIBUS_CONFIG: |
         gitlab_rails['lfs_enabled'] = true
         gitlab_rails['initial_root_password'] = 'P@ssw0rd1234'
+        gitlab_rails['monitoring_whitelist'] = ['0.0.0.0/0']
+        node_exporter['enable'] = true
+        node_exporter['listen_address'] = '0.0.0.0:9100'
+        redis_exporter['listen_address'] = '0.0.0.0:9121'
+        postgres_exporter['listen_address'] = '0.0.0.0:9187'
+        gitlab_exporter['listen_address'] = '0.0.0.0'
+        gitlab_exporter['listen_port'] = '9168'
+        gitaly['configuration'] = { prometheus_listen_addr: '0.0.0.0:9236' }
+        gitlab_workhorse['prometheus_listen_addr'] = '0.0.0.0:9229'
+        sidekiq['listen_address'] = '0.0.0.0'
+        sidekiq['listen_port'] = 8082
+        nginx['status'] = { "enable" => true, "listen_addresses" => ["0.0.0.0"], "port" => 8060, "vts_enable" => true }
         # Add any other gitlab.rb configuration here, each on its own line
     shm_size: '256m'
     volumes:
@@ -34,7 +46,38 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - dep-pipeline-network
-  nexus:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: dep-pipeline-prometheus
+    restart: always
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/alerts.yml:/etc/prometheus/alerts.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - dep-pipeline-network
+  grafana:
+    image: grafana/grafana:latest
+    container_name: dep-pipeline-grafana
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=P@ssw0rd1234
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - dep-pipeline-network
+  .nexus:
     image: sonatype/nexus3:3.89.0
     container_name: dep-pipeline-nexus
     restart: always
@@ -46,7 +89,7 @@ services:
       - ./nexus-data:/nexus-data
     networks:
       - dep-pipeline-network
-  nginx:
+  .nginx:
     image: nginx:latest
     container_name: dep-pipeline-nginx
     restart: always
@@ -66,3 +109,5 @@ networks:
 volumes:
   gitlab_data:
   gitlab_artifacts:
+  prometheus_data:
+  grafana_data:
